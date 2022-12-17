@@ -57,23 +57,20 @@ for filename in glob.glob(orig_filenamepath):
             os.path.join(DATA_PATH_ORIGINAL, 'ORIG_DIVINA_COMMEDIA_INFERNO_' + str(number_output) + '.txt')))
 
 df = pd.DataFrame(columns=['Original', 'Translate_EN'])
-print(natsorted(glob.glob(trad_filenamepath_en)))
-
 
 for file_orig, file_trad in zip(natsorted(glob.glob(orig_filenamepath)), natsorted(glob.glob(trad_filenamepath_en))):
-    print(file_orig)
+    df_orig = pd.read_csv(file_orig, header=None, sep='\\n', names=['Original'], engine='python')
+    df_trad = pd.read_csv(file_trad, header=None, sep='\\n', names=['Translate_IT'], engine='python')
 
-    df_orig = pd.read_csv(file_orig, header=None, sep="\n", names=['Original'])
-    df_trad = pd.read_csv(file_trad, header=None, sep="\n", names=['Translate_IT'])
-
-    print(df_orig)
     # df = df.merge(df_orig.join(df_trad), how='outer', left_on=['Originale', 'Traduzione EN'], right_on=[
     # 'Originale', 'Traduzione IT'])
 
     # orig = df.astype(str)
-    print(' '.join(df_orig['Original']))
-    print(' '.join(df_trad['Translate_IT']))
+    df_orig = (' '.join(df_orig['Original'])).split('.')
+    df_trad = (' '.join(df_trad['Translate_IT'])).split('.')
 
+    print(df_orig)
+    print(df_trad)
     break
 
 # print(df)
