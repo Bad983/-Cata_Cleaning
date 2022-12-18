@@ -66,14 +66,6 @@ for file_orig, file_trad in zip(natsorted(glob.glob(orig_filenamepath)), natsort
     df_orig = pd.DataFrame(re.split('[.!;]', ' '.join(df_orig['Original'])), columns=['Original']).dropna()
     df_trad = pd.DataFrame(re.split('[.!]', ' '.join(df_trad['Translate_IT'])), columns=['Translate_IT']).dropna()
 
-    '''
-    df = df.merge(df_orig.join(df_trad),
-                  how='outer',
-                  left_on=['Original', 'Translate_IT'],
-                  right_on=['Original', 'Translate_IT']).dropna()
-
-    df.to_csv(DATA_PATH_OUT, index=False)
-    '''
     number = ((file_orig.split('/')[-1]).split('.')[0]).split('_')[-1]
     df = df_orig.join(df_trad).dropna()
     df.to_csv(DATA_PATH_OUT + str(number) + '.csv', index=False)
