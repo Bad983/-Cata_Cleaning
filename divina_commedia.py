@@ -11,6 +11,7 @@ Original file is located at
 # drive.mount('/content/drive')
 
 import os
+import re
 import glob
 import pandas as pd
 from natsort import natsorted
@@ -62,8 +63,15 @@ for file_orig, file_trad in zip(natsorted(glob.glob(orig_filenamepath)), natsort
     df_orig = pd.read_csv(file_orig, header=None, sep='\\n', names=['Original'], engine='python')
     df_trad = pd.read_csv(file_trad, header=None, sep='\\n', names=['Translate_IT'], engine='python')
 
+    print(' '.join(df_orig['Original']))
+    print(' '.join(df_trad['Translate_IT']))
+    print()
+
     # df = df.merge(df_orig.join(df_trad), how='outer', left_on=['Originale', 'Traduzione EN'], right_on=[
     # 'Originale', 'Traduzione IT'])
+    print(re.split('[.!;]', ' '.join(df_orig['Original'])))
+    print(re.split('[.!]', ' '.join(df_trad['Translate_IT'])))
+    print()
 
     # orig = df.astype(str)
     df_orig = (' '.join(df_orig['Original'])).split('.')
