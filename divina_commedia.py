@@ -35,7 +35,7 @@ DATA_PATH_TRANSLATE = os.path.abspath(os.path.join(root_folder, data_folder_name
 trad_filenamepath_en = os.path.abspath(os.path.join(DATA_PATH_TRANSLATE, filenamepath_traduzione_en))
 
 data_folder_out = 'data_out'
-DATA_PATH_OUT = os.path.abspath(os.path.join(data_folder_out, 'divina_commedia.csv'))
+DATA_PATH_OUT = os.path.abspath(os.path.join(data_folder_out, 'divina_commedia_inferno.csv'))
 
 
 def transform_roman_numeral_to_number(roman_numeral):
@@ -73,5 +73,4 @@ for file_orig, file_trad in zip(natsorted(glob.glob(orig_filenamepath)), natsort
 
     df.to_csv(DATA_PATH_OUT, index=False)
 
-print(df)
 
