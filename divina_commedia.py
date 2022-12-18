@@ -35,7 +35,7 @@ DATA_PATH_TRANSLATE = os.path.abspath(os.path.join(root_folder, data_folder_name
 trad_filenamepath_en = os.path.abspath(os.path.join(DATA_PATH_TRANSLATE, filenamepath_traduzione_en))
 
 data_folder_out = 'data_out'
-DATA_PATH_OUT = os.path.abspath(os.path.join(data_folder_out, 'divina_commedia_inferno.csv'))
+DATA_PATH_OUT = os.path.abspath(os.path.join(data_folder_out, 'divina_commedia_inferno_'))
 
 
 def transform_roman_numeral_to_number(roman_numeral):
@@ -57,7 +57,7 @@ for filename in glob.glob(orig_filenamepath):
         os.rename(filename, os.path.abspath(
             os.path.join(DATA_PATH_ORIGINAL, 'ORIG_DIVINA_COMMEDIA_INFERNO_' + str(number_output) + '.txt')))
 
-df = pd.DataFrame(columns=['Original', 'Translate_IT'])
+# df = pd.DataFrame(columns=['Original', 'Translate_IT'])
 
 for file_orig, file_trad in zip(natsorted(glob.glob(orig_filenamepath)), natsorted(glob.glob(trad_filenamepath_en))):
     df_orig = pd.read_csv(file_orig, header=None, sep='\\n', names=['Original'], engine='python')
@@ -66,11 +66,17 @@ for file_orig, file_trad in zip(natsorted(glob.glob(orig_filenamepath)), natsort
     df_orig = pd.DataFrame(re.split('[.!;]', ' '.join(df_orig['Original'])), columns=['Original']).dropna()
     df_trad = pd.DataFrame(re.split('[.!]', ' '.join(df_trad['Translate_IT'])), columns=['Translate_IT']).dropna()
 
+    '''
     df = df.merge(df_orig.join(df_trad),
                   how='outer',
                   left_on=['Original', 'Translate_IT'],
                   right_on=['Original', 'Translate_IT']).dropna()
 
     df.to_csv(DATA_PATH_OUT, index=False)
+    '''
+    number = ((file_orig.split('/')[-1]).split('.')[0]).split('_')[-1]
+    df = df_orig.join(df_trad).dropna()
+    df.to_csv(DATA_PATH_OUT + str(number) + '.csv', index=False)
+
 
 
