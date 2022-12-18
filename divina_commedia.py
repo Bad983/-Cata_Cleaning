@@ -57,30 +57,21 @@ for filename in glob.glob(orig_filenamepath):
         os.rename(filename, os.path.abspath(
             os.path.join(DATA_PATH_ORIGINAL, 'ORIG_DIVINA_COMMEDIA_INFERNO_' + str(number_output) + '.txt')))
 
-df = pd.DataFrame(columns=['Original', 'Translate_EN'])
+df = pd.DataFrame(columns=['Original', 'Translate_IT'])
 
 for file_orig, file_trad in zip(natsorted(glob.glob(orig_filenamepath)), natsorted(glob.glob(trad_filenamepath_en))):
     df_orig = pd.read_csv(file_orig, header=None, sep='\\n', names=['Original'], engine='python')
     df_trad = pd.read_csv(file_trad, header=None, sep='\\n', names=['Translate_IT'], engine='python')
 
-    print(' '.join(df_orig['Original']))
-    print(' '.join(df_trad['Translate_IT']))
-    print()
+    df_orig = pd.DataFrame(re.split('[.!;]', ' '.join(df_orig['Original'])), columns=['Original']).dropna()
+    df_trad = pd.DataFrame(re.split('[.!]', ' '.join(df_trad['Translate_IT'])), columns=['Translate_IT']).dropna()
 
-    # df = df.merge(df_orig.join(df_trad), how='outer', left_on=['Originale', 'Traduzione EN'], right_on=[
-    # 'Originale', 'Traduzione IT'])
-    print(re.split('[.!;]', ' '.join(df_orig['Original'])))
-    print(re.split('[.!]', ' '.join(df_trad['Translate_IT'])))
-    print()
+    df = df.merge(df_orig.join(df_trad),
+                  how='outer',
+                  left_on=['Original', 'Translate_IT'],
+                  right_on=['Original', 'Translate_IT']).dropna()
 
-    # orig = df.astype(str)
-    df_orig = (' '.join(df_orig['Original'])).split('.')
-    df_trad = (' '.join(df_trad['Translate_IT'])).split('.')
+    df.to_csv(DATA_PATH_OUT, index=False)
 
-    print(df_orig)
-    print(df_trad)
-    break
+print(df)
 
-# print(df)
-
-# df.to_csv(DATA_PATH_OUT, index=False)
