@@ -26,13 +26,13 @@ data_folder_name_originale = 'Originale'
 filename_originale = 'ORIG_DIVINA_COMMEDIA_INFERNO_*.txt'
 
 data_folder_name_traduzione = 'Traduzione'
-filenamepath_traduzione_en = 'TRAD_5_DIVINA_COMMEDIA_INFERNO_IT_*.txt'
+filenamepath_traduzione_it_1 = 'TRAD_6_DIVINA_COMMEDIA_INFERNO_IT_*.txt'
 
 DATA_PATH_ORIGINAL = os.path.abspath(os.path.join(root_folder, data_folder_name_originale))
 orig_filenamepath = os.path.abspath(os.path.join(DATA_PATH_ORIGINAL, filename_originale))
 
 DATA_PATH_TRANSLATE = os.path.abspath(os.path.join(root_folder, data_folder_name_traduzione))
-trad_filenamepath_en = os.path.abspath(os.path.join(DATA_PATH_TRANSLATE, filenamepath_traduzione_en))
+trad_filenamepath_it_1 = os.path.abspath(os.path.join(DATA_PATH_TRANSLATE, filenamepath_traduzione_it_1))
 
 data_folder_out = 'data_out'
 DATA_PATH_OUT = os.path.abspath(os.path.join(data_folder_out, 'divina_commedia_inferno_'))
@@ -57,17 +57,24 @@ for filename in glob.glob(orig_filenamepath):
         os.rename(filename, os.path.abspath(
             os.path.join(DATA_PATH_ORIGINAL, 'ORIG_DIVINA_COMMEDIA_INFERNO_' + str(number_output) + '.txt')))
 
-# df = pd.DataFrame(columns=['Original', 'Translate_IT'])
+for file_orig, file_trad_1 in zip(natsorted(glob.glob(orig_filenamepath)),
+                                  natsorted(glob.glob(trad_filenamepath_it_1))):
 
-for file_orig, file_trad in zip(natsorted(glob.glob(orig_filenamepath)), natsorted(glob.glob(trad_filenamepath_en))):
     df_orig = pd.read_csv(file_orig, header=None, sep='\\n', names=['Original'], engine='python')
-    df_trad = pd.read_csv(file_trad, header=None, sep='\\n', names=['Translate_IT'], engine='python')
+    df_trad_1 = pd.read_csv(file_trad_1, header=None, sep='\\n', names=['Translate_IT_1'], engine='python')
 
-    df_orig = pd.DataFrame(re.split('[.!;]', ' '.join(df_orig['Original'])), columns=['Original']).dropna()
-    df_trad = pd.DataFrame(re.split('[.!]', ' '.join(df_trad['Translate_IT'])), columns=['Translate_IT']).dropna()
+    df_orig = pd.DataFrame(re.split('[.!;]', re.sub('-', '', ' '.join(df_orig['Original']))),
+                           columns=['Original']).dropna()
+
+    traduzione_1 = re.sub('-', '', ' '.join(df_trad_1['Translate_IT_1']))
+    traduzione_1 = re.sub('\([^)]*\)', '', traduzione_1)
+    traduzione_1 = re.split('[.!]', traduzione_1)
+
+    df_trad_1 = pd.DataFrame(traduzione_1, columns=['Translate_IT_1']).dropna()
 
     number = ((file_orig.split('/')[-1]).split('.')[0]).split('_')[-1]
-    df = df_orig.join(df_trad).dropna()
+    df = df_orig.join(df_trad_1).dropna()
+
     df.to_csv(DATA_PATH_OUT + str(number) + '.csv', index=False)
 
 
