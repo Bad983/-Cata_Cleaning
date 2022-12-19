@@ -66,16 +66,16 @@ for file_orig, file_trad_1 in zip(natsorted(glob.glob(orig_filenamepath)),
     df_orig = pd.DataFrame(re.split('[.!;]', re.sub('-', '', ' '.join(df_orig['Original']))),
                            columns=['Original']).dropna()
 
-    traduzione_1 = re.sub('-', '', ' '.join(df_trad_1['Translate_IT_1']))
+    traduzione_1 = re.sub('-', '', ' '.join(df_trad_1['Translate_IT_1']).strip())
     traduzione_1 = re.sub('\([^)]*\)', '', traduzione_1)
     traduzione_1 = re.split('[.!]', traduzione_1)
 
-    df_trad_1 = pd.DataFrame(traduzione_1, columns=['Translate_IT_1']).dropna()
+    df_trad_1 = pd.DataFrame([trad.strip() for trad in traduzione_1], columns=['Translate_IT_1']).dropna()
 
     number = ((file_orig.split('/')[-1]).split('.')[0]).split('_')[-1]
     df = df_orig.join(df_trad_1).dropna()
 
-    df.to_csv(DATA_PATH_OUT + str(number) + '.csv', index=False)
+    df.to_csv(DATA_PATH_OUT + str(number) + '.csv', index=False, sep='|', encoding='utf-8')
 
 
 
