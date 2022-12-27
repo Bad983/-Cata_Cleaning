@@ -1,4 +1,4 @@
-# Data_Cleaning
+# Data_Translate
 
 Progetto di predisposizione dei dati necessari ad addestrare il modello Transformer per la traduzione da Dantesco a Italiano.
 
